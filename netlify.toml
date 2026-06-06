@@ -1,0 +1,31 @@
+[build]
+  publish = "."
+
+[build.environment]
+  SECRETS_SCAN_ENABLED = "false"
+
+# Access gate - validates purchase token, sets cookie
+[[edge_functions]]
+  path = "/access"
+  function = "access"
+
+# Middleware - protects all guide pages
+[[edge_functions]]
+  path = "/guide/*"
+  function = "protect"
+
+# Security headers for all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Extra headers for guide pages
+[[headers]]
+  for = "/guide/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    X-Robots-Tag = "noindex, nofollow"

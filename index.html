@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUILD IT — Stop Starting Over</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ─── TOKENS ─────────────────────────────────────────────── */
+:root{
+  --bg:       #0c0b09;
+  --bg2:      #131210;
+  --bg3:      #1c1916;
+  --bg4:      #232018;
+  --red:      #d4321e;
+  --red2:     #e84a34;
+  --bone:     #ede8dc;
+  --bone2:    #f7f3eb;
+  --muted:    #6b6458;
+  --muted2:   #9a9088;
+  --border:   rgba(237,232,220,0.07);
+  --border2:  rgba(237,232,220,0.14);
+  --green:    #4aaf7a;
+}
+
+/* ─── RESET ──────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--bone);
+  font-family:'Barlow',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* ─── GRAIN ──────────────────────────────────────────────── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;mix-blend-mode:overlay;
+}
+
+/* ─── TICKER ─────────────────────────────────────────────── */
+.ticker{
+  background:var(--red);
+  overflow:hidden;padding:10px 0;
+  position:relative;z-index:10;
+}
+.ticker-track{
+  display:flex;gap:0;
+  animation:ticker 20s linear infinite;
+  width:max-content;
+}
+.ticker-item{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:#fff;
+  white-space:nowrap;padding:0 32px;
+  display:flex;align-items:center;gap:32px;
+}
+.ticker-dot{width:4px;height:4px;background:#fff;border-radius:50%;opacity:.6;flex-shrink:0}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── NAV ────────────────────────────────────────────────── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 64px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,11,9,0.94);
+  backdrop-filter:blur(12px);
+}
+.nav-logo{
+  font-family:'Anton',sans-serif;
+  font-size:22px;letter-spacing:8px;
+  color:var(--bone);
+}
+.nav-logo span{color:var(--red)}
+.nav-links{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-link{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted2);text-decoration:none;
+  transition:color 0.2s;
+}
+.nav-link:hover{color:var(--bone)}
+.nav-cta{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--bg);background:var(--bone);
+  padding:10px 24px;text-decoration:none;
+  transition:all 0.2s;border:1px solid var(--bone);
+}
+.nav-cta:hover{background:transparent;color:var(--bone)}
+
+/* ─── HERO ───────────────────────────────────────────────── */
+.hero{
+  display:grid;
+  grid-template-columns:1fr 480px;
+  gap:0;
+  min-height:calc(100vh - 85px);
+  border-bottom:1px solid var(--border);
+}
+.hero-left{
+  padding:80px 64px;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  border-right:1px solid var(--border);
+}
+.hero-tag{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--red);margin-bottom:40px;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-tag::before{content:'■';font-size:8px}
+.hero-headline{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(80px,11vw,148px);
+  line-height:0.88;letter-spacing:2px;
+  color:var(--bone);
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+}
+.hero-headline .stroke{
+  -webkit-text-stroke:1.5px var(--bone);
+  color:transparent;
+}
+.hero-headline .red{color:var(--red)}
+.hero-bottom{
+  display:flex;align-items:flex-end;gap:40px;
+  margin-top:48px;
+}
+.hero-stat{
+  border-left:2px solid var(--red);
+  padding-left:16px;
+}
+.hero-stat-num{
+  font-family:'Anton',sans-serif;
+  font-size:32px;color:var(--bone);letter-spacing:1px;
+}
+.hero-stat-label{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-top:4px;
+}
+.hero-right{
+  padding:80px 48px;
+  background:var(--bg2);
+  display:flex;flex-direction:column;
+  justify-content:center;gap:32px;
+}
+.hero-form-tag{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted2);
+}
+.hero-form-title{
+  font-family:'Anton',sans-serif;
+  font-size:36px;letter-spacing:2px;color:var(--bone);
+  line-height:1.1;
+}
+.hero-form-sub{
+  font-size:14px;line-height:1.8;
+  color:var(--muted2);font-weight:300;
+}
+.hero-form-sub b{color:var(--bone);font-weight:500}
+
+/* ─── FORMS ──────────────────────────────────────────────── */
+.input-group{
+  display:flex;flex-direction:column;gap:12px;
+  margin-top:8px;
+}
+.input-wrap{position:relative}
+.input-label{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;display:block;
+}
+input,textarea{
+  width:100%;
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  color:var(--bone);
+  font-family:'Barlow',sans-serif;
+  font-size:15px;font-weight:400;
+  padding:14px 18px;outline:none;
+  transition:border-color 0.2s,background 0.2s;
+  border-radius:0;-webkit-appearance:none;
+}
+input:focus{border-color:var(--red);background:var(--bg4)}
+input::placeholder{color:var(--muted);font-size:13px}
+
+.btn{
+  font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+  font-weight:700;border:none;cursor:pointer;
+  padding:16px 32px;transition:all 0.2s;
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red2)}
+.btn-bone{background:var(--bone);color:var(--bg)}
+.btn-bone:hover{background:var(--bone2)}
+.btn-outline{
+  background:transparent;
+  border:1px solid var(--border2);color:var(--bone);
+}
+.btn-outline:hover{border-color:var(--bone)}
+.btn-full{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+.success-msg{
+  display:none;
+  font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:1.5px;
+  color:var(--green);margin-top:12px;
+  padding:14px 18px;
+  border:1px solid rgba(74,175,122,0.25);
+  background:rgba(74,175,122,0.06);
+}
+.success-msg.show{display:block}
+
+/* ─── SECTION SHELL ──────────────────────────────────────── */
+.sec{
+  padding:100px 64px;
+  border-bottom:1px solid var(--border);
+}
+.sec-tag{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:3.5px;text-transform:uppercase;
+  color:var(--red);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-tag::before{content:'▸'}
+.sec-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(44px,6vw,80px);
+  letter-spacing:2px;color:var(--bone);
+  line-height:0.92;margin-bottom:16px;
+}
+.sec-sub{
+  font-size:15px;line-height:1.8;color:var(--muted2);
+  max-width:560px;font-weight:300;
+}
+.h-rule{
+  height:1px;background:var(--border);margin:48px 0;
+}
+.red-rule{
+  width:48px;height:3px;background:var(--red);margin:20px 0 48px;
+}
+
+/* ─── STEPS / FUNNEL ─────────────────────────────────────── */
+.steps-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  margin-top:60px;border:1px solid var(--border);
+}
+.step-card{
+  padding:48px 40px;border-right:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:background 0.3s;
+}
+.step-card:last-child{border-right:none}
+.step-card:hover{background:var(--bg2)}
+.step-arrow{
+  position:absolute;right:-18px;top:50%;
+  transform:translateY(-50%);
+  font-family:'Anton',sans-serif;
+  font-size:28px;color:var(--red);z-index:2;
+}
+.step-card:last-child .step-arrow{display:none}
+.step-num{
+  font-family:'Anton',sans-serif;
+  font-size:80px;line-height:1;
+  color:var(--bg3);margin-bottom:24px;
+  transition:color 0.3s;
+}
+.step-card:hover .step-num{color:rgba(212,50,30,0.12)}
+.step-title{
+  font-family:'Anton',sans-serif;
+  font-size:24px;letter-spacing:2px;color:var(--bone);
+  margin-bottom:12px;
+}
+.step-body{
+  font-size:13.5px;line-height:1.8;color:var(--muted2);
+  font-weight:300;
+}
+.step-badge{
+  display:inline-block;margin-top:20px;
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--red);border:1px solid rgba(212,50,30,0.3);
+  padding:5px 12px;
+}
+
+/* ─── OFFER ──────────────────────────────────────────────── */
+.offer-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  margin-top:60px;
+}
+.offer-card{
+  background:var(--bg);
+  padding:48px 44px;
+  transition:background 0.3s;
+  position:relative;
+}
+.offer-card:hover{background:var(--bg2)}
+.offer-card.span2{grid-column:span 2;background:var(--bg2)}
+.offer-index{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:3px;
+  color:var(--red);margin-bottom:20px;
+}
+.offer-name{
+  font-family:'Anton',sans-serif;
+  font-size:32px;letter-spacing:2px;color:var(--bone);
+  margin-bottom:14px;
+}
+.offer-desc{
+  font-size:14px;line-height:1.8;color:var(--muted2);
+  margin-bottom:24px;font-weight:300;
+}
+.tag-list{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;
+}
+.tag{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted2);
+  border:1px solid var(--border2);
+  padding:5px 12px;
+}
+.offer-big-num{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(60px,8vw,100px);
+  color:var(--bg4);position:absolute;
+  right:40px;bottom:20px;letter-spacing:2px;
+  transition:color 0.3s;pointer-events:none;
+}
+.offer-card:hover .offer-big-num{color:rgba(212,50,30,0.08)}
+
+/* ─── MEDIA ──────────────────────────────────────────────── */
+.media-layout{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  grid-template-rows:280px 200px;
+  gap:6px;margin-top:60px;
+}
+.media-cell{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:12px;position:relative;overflow:hidden;
+  cursor:pointer;transition:all 0.3s;
+}
+.media-cell:hover{border-color:var(--border2)}
+.media-cell.hero-cell{grid-row:span 2}
+.media-cell:hover .media-shine{opacity:1}
+.media-shine{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,50,30,0.04),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.media-icon{font-size:24px;opacity:.25}
+.media-lbl{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);text-align:center;line-height:1.6;
+}
+.media-chip{
+  position:absolute;top:14px;left:14px;
+  font-family:'Space Mono',monospace;
+  font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--red);border:1px solid rgba(212,50,30,0.3);
+  padding:4px 10px;background:rgba(12,11,9,0.8);
+}
+.media-coming{
+  position:absolute;bottom:14px;right:14px;
+  font-family:'Space Mono',monospace;
+  font-size:8px;letter-spacing:2px;
+  color:var(--muted);
+}
+
+/* ─── TESTIMONIALS ───────────────────────────────────────── */
+.testimonial-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  margin-top:60px;
+}
+.t-card{
+  background:var(--bg);padding:40px 36px;
+  position:relative;overflow:hidden;
+}
+.t-blur{
+  position:absolute;inset:0;
+  backdrop-filter:blur(3px);
+  background:rgba(12,11,9,0.6);
+  display:flex;align-items:center;justify-content:center;
+}
+.t-label{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted2);border:1px solid var(--border2);
+  padding:8px 18px;
+}
+.t-mark{
+  font-family:'Anton',sans-serif;
+  font-size:80px;color:var(--bg3);line-height:.8;margin-bottom:20px;
+}
+.t-text{
+  font-size:14px;line-height:1.8;color:var(--muted2);
+  font-style:italic;font-weight:300;margin-bottom:24px;
+}
+.t-who{display:flex;align-items:center;gap:12px}
+.t-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.t-name{font-size:13px;font-weight:500;color:var(--bone)}
+.t-detail{
+  font-family:'Space Mono',monospace;
+  font-size:9px;color:var(--muted);margin-top:2px;
+  letter-spacing:1px;
+}
+
+/* ─── PRICING ────────────────────────────────────────────── */
+.pricing-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:40px;margin-top:60px;align-items:start;
+}
+.price-card{
+  border:1px solid var(--border2);
+  position:relative;overflow:hidden;
+}
+.price-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:var(--red);
+}
+.price-inner{padding:52px 48px}
+.price-tag{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--red);margin-bottom:20px;
+}
+.price-amount{
+  font-family:'Anton',sans-serif;
+  font-size:100px;line-height:1;letter-spacing:2px;
+  color:var(--bone);
+}
+.price-amount sup{
+  font-size:40px;vertical-align:top;
+  margin-top:16px;display:inline-block;color:var(--red);
+}
+.price-note{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:1.5px;
+  color:var(--muted);margin-top:6px;
+}
+.price-divider{height:1px;background:var(--border);margin:36px 0}
+.price-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;border-bottom:1px solid var(--border);
+  font-size:13px;color:var(--muted2);font-weight:300;
+}
+.price-row::before{
+  content:'✓';color:var(--green);
+  font-family:'Space Mono',monospace;
+  font-size:11px;font-weight:700;flex-shrink:0;
+}
+.price-watermark{
+  position:absolute;right:24px;bottom:16px;
+  font-family:'Anton',sans-serif;
+  font-size:80px;letter-spacing:4px;
+  color:var(--bg2);pointer-events:none;
+}
+.price-actions{margin-top:32px;display:flex;flex-direction:column;gap:12px}
+.price-secure{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:1.5px;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+  margin-top:8px;
+}
+
+.price-right{display:flex;flex-direction:column;gap:24px}
+.mini-card{
+  border:1px solid var(--border);
+  padding:28px 32px;
+  background:var(--bg2);
+}
+.mini-tag{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;
+}
+.mini-title{
+  font-family:'Anton',sans-serif;
+  font-size:20px;letter-spacing:2px;color:var(--bone);
+  margin-bottom:8px;
+}
+.mini-body{font-size:13px;line-height:1.7;color:var(--muted2);font-weight:300}
+
+/* ─── JOIN GROUP ─────────────────────────────────────────── */
+.group-sec{background:var(--bg2)}
+.group-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+.group-text{}
+.group-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(44px,6vw,72px);
+  letter-spacing:2px;line-height:.92;color:var(--bone);
+  margin-bottom:24px;
+}
+.group-title span{color:var(--red)}
+.group-body{
+  font-size:15px;line-height:1.8;color:var(--muted2);
+  font-weight:300;max-width:460px;
+}
+.requirement{
+  margin-top:32px;
+  border-left:2px solid var(--red);
+  padding-left:20px;
+}
+.req-label{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--red);margin-bottom:6px;
+}
+.req-text{font-size:13px;color:var(--muted2);line-height:1.7}
+.group-form{
+  border:1px solid var(--border2);
+  padding:48px 40px;
+}
+.form-title{
+  font-family:'Anton',sans-serif;
+  font-size:26px;letter-spacing:2px;color:var(--bone);
+  margin-bottom:6px;
+}
+.form-sub{font-size:13px;color:var(--muted2);margin-bottom:28px;line-height:1.7}
+.wa-direct{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:15px 24px;margin-top:12px;
+  background:#25d366;color:#fff;
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;transition:background 0.2s;
+}
+.wa-direct:hover{background:#22c55e}
+
+/* ─── CLOSING ────────────────────────────────────────────── */
+.closing{
+  padding:140px 64px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.closing::before{
+  content:'BUILT';
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Anton',sans-serif;
+  font-size:clamp(120px,18vw,240px);
+  letter-spacing:16px;
+  color:var(--bg2);pointer-events:none;
+  white-space:nowrap;
+}
+.closing-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(52px,7vw,96px);
+  letter-spacing:2px;line-height:.9;color:var(--bone);
+  position:relative;z-index:1;
+}
+.closing-title span{color:var(--red)}
+.closing-right{position:relative;z-index:1}
+.closing-sub{
+  font-size:15px;line-height:1.8;color:var(--muted2);
+  margin-bottom:36px;font-weight:300;
+}
+.closing-sub b{color:var(--bone);font-weight:500}
+
+/* ─── FOOTER ─────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 64px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;gap:40px;
+}
+.ft-logo{
+  font-family:'Anton',sans-serif;
+  font-size:18px;letter-spacing:6px;color:var(--bone);
+}
+.ft-tagline{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);text-align:center;
+}
+.ft-copy{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:1px;color:var(--muted);
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────── */
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.65s ease,transform 0.65s ease;
+}
+.reveal.visible{opacity:1;transform:none}
+.reveal-d1{transition-delay:.08s}
+.reveal-d2{transition-delay:.16s}
+.reveal-d3{transition-delay:.24s}
+
+/* ─── MOBILE ─────────────────────────────────────────────── */
+@media(max-width:900px){
+  nav{padding:16px 24px}
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr;grid-template-rows:auto auto}
+  .hero-left{padding:60px 24px 48px;border-right:none;border-bottom:1px solid var(--border)}
+  .hero-right{padding:48px 24px}
+  .hero-bottom{flex-wrap:wrap;gap:24px}
+  .sec{padding:72px 24px}
+  .steps-grid{grid-template-columns:1fr}
+  .step-card{border-right:none;border-bottom:1px solid var(--border)}
+  .step-card:last-child{border-bottom:none}
+  .step-arrow{display:none}
+  .offer-layout{grid-template-columns:1fr}
+  .offer-card.span2{grid-column:span 1}
+  .media-layout{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .media-cell.hero-cell{grid-row:span 1}
+  .testimonial-row{grid-template-columns:1fr}
+  .pricing-layout{grid-template-columns:1fr}
+  .price-watermark{display:none}
+  .group-inner{grid-template-columns:1fr;gap:40px}
+  .closing{grid-template-columns:1fr;gap:40px;padding:80px 24px}
+  .closing::before{font-size:80px;opacity:.4}
+  footer{grid-template-columns:1fr;text-align:center;padding:28px 24px;gap:12px}
+}
+
+</style>
+</head>
+<body>
+
+<!-- ─── TICKER ────────────────────────────────────────────── -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-item">Discipline<div class="ticker-dot"></div>Conviction<div class="ticker-dot"></div>Build<div class="ticker-dot"></div>Stop Starting Over<div class="ticker-dot"></div>12 Weeks<div class="ticker-dot"></div>No Excuses<div class="ticker-dot"></div>Chase The Overload<div class="ticker-dot"></div>The System Works<div class="ticker-dot"></div></div>
+    <div class="ticker-item">Discipline<div class="ticker-dot"></div>Conviction<div class="ticker-dot"></div>Build<div class="ticker-dot"></div>Stop Starting Over<div class="ticker-dot"></div>12 Weeks<div class="ticker-dot"></div>No Excuses<div class="ticker-dot"></div>Chase The Overload<div class="ticker-dot"></div>The System Works<div class="ticker-dot"></div></div>
+  </div>
+</div>
+
+<!-- ─── NAV ──────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">BUILD IT<span style="color:var(--red)">.</span></div>
+  <div class="nav-links">
+    <a href="#how-it-works" class="nav-link">How it works</a>
+    <a href="#offer" class="nav-link">The system</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+    <a href="#community" class="nav-link">Community</a>
+  </div>
+
+</nav>
+
+<!-- ─── HERO ──────────────────────────────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero-left">
+    <div>
+      <div class="hero-tag">The Beginner's System — 2026</div>
+      <h1 class="hero-headline">
+        <span>STOP</span>
+        <span class="stroke">START</span>
+        <span class="red">ING.</span>
+      </h1>
+    </div>
+    <div class="hero-bottom">
+      <div class="hero-stat">
+        <div class="hero-stat-num">12</div>
+        <div class="hero-stat-label">Weeks</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3</div>
+        <div class="hero-stat-label">Components</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">$97</div>
+        <div class="hero-stat-label">One time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL CAPTURE -->
+  <div class="hero-right" id="start">
+    <div>
+      <div class="hero-form-tag">Step 01 — Enter your details</div>
+      <div class="hero-form-title">Get The<br>System.</div>
+    </div>
+    <p class="hero-form-sub">
+      Enter your name and email below. You'll be taken directly to the checkout to complete your purchase of the full <b>BUILD IT system</b> — interactive guide, private accountability group, and the complete discipline framework.
+    </p>
+
+    <form id="hero-form" onsubmit="handleHeroForm(event)">
+      <div class="input-group">
+        <div>
+          <label class="input-label">Your name</label>
+          <input type="text" id="hero-name" name="name" placeholder="Enter your name" required>
+        </div>
+        <div>
+          <label class="input-label">Email address</label>
+          <input type="email" id="hero-email" name="email" placeholder="Enter your email address" required>
+        </div>
+        <button type="submit" class="btn btn-red btn-full" id="hero-btn">
+          GET INSTANT ACCESS — $97
+          <span>→</span>
+        </button>
+      </div>
+      <p style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);margin-top:12px;letter-spacing:1px">
+        Secure checkout · Instant access · No subscription
+      </p>
+    </form>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ──────────────────────────────────────── -->
+<section class="sec" id="how-it-works">
+  <div class="sec-tag">The process</div>
+  <h2 class="sec-title">Three Steps.<br>Zero Confusion.</h2>
+  <div class="red-rule"></div>
+
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Enter Your Email</div>
+      <div class="step-body">Submit your email above. You receive an immediate link to purchase the full system. No gatekeeping — just a direct path to getting started.</div>
+      <div class="step-badge">Free entry</div>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="step-card reveal reveal-d1">
+      <div class="step-num">02</div>
+      <div class="step-title">Purchase &amp; Get Access</div>
+      <div class="step-body">One payment of $97. Instant access to the full system. No app. Yours permanently.</div>
+      <div class="step-badge">$97 one-time</div>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="step-card reveal reveal-d2">
+      <div class="step-num">03</div>
+      <div class="step-title">Join the Group</div>
+      <div class="step-body">After purchase, submit your WhatsApp number. You're added to the private accountability group within 24 hours. Weekly check-ins begin immediately.</div>
+      <div class="step-badge">Clients only</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── OFFER ─────────────────────────────────────────────── -->
+<section class="sec" id="offer" style="background:var(--bg2)">
+  <div class="sec-tag">What you get</div>
+  <h2 class="sec-title">The Complete<br>System.</h2>
+  <div class="red-rule"></div>
+  <p class="sec-sub">Not information. A system. Three components designed to remove every reason to stop.</p>
+
+  <div class="offer-layout">
+    <div class="offer-card reveal">
+      <div class="offer-index">— Component 01</div>
+      <div class="offer-name">The BUILD IT Interactive Guide</div>
+      <div class="offer-desc">Not a PDF. A fully interactive web-based guide that opens in your browser. Every session planned, every meal simplified, every week tracked. You open it. You execute. No thinking required.</div>
+      <div class="tag-list">
+        <span class="tag">12-week program</span>
+        <span class="tag">Push / Pull / Legs</span>
+        <span class="tag">Protein calculator</span>
+        <span class="tag">Daily checklist</span>
+        <span class="tag">Progress tracker</span>
+      </div>
+      <div class="offer-big-num">01</div>
+    </div>
+    <div class="offer-card reveal reveal-d1">
+      <div class="offer-index">— Component 02</div>
+      <div class="offer-name">Private Accountability Community</div>
+      <div class="offer-desc">A private WhatsApp group for paying clients only. Weekly check-ins from Josaphat. Direct access. Real accountability from people doing the same 12 weeks alongside you.</div>
+      <div class="tag-list">
+        <span class="tag">WhatsApp group</span>
+        <span class="tag">Weekly check-ins</span>
+        <span class="tag">Direct access</span>
+        <span class="tag">Clients only</span>
+      </div>
+      <div class="offer-big-num">02</div>
+    </div>
+    <div class="offer-card span2 reveal">
+      <div class="offer-index">— Component 03</div>
+      <div class="offer-name">The Discipline Framework</div>
+      <div class="offer-desc" style="max-width:600px">The identity shift that turns someone who tries into someone who builds. Five non-negotiable daily standards. A mindset protocol for the days motivation disappears — because it will. Conviction and discipline woven together into a system that runs on character, not feeling.</div>
+      <div class="tag-list">
+        <span class="tag">Identity foundation</span>
+        <span class="tag">Five daily standards</span>
+        <span class="tag">3-step reset protocol</span>
+        <span class="tag">Conviction-driven</span>
+        <span class="tag">Long game mindset</span>
+      </div>
+      <div class="offer-big-num">03</div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ─── PRICING ─────────────────────────────────────────────── -->
+<section class="sec" id="pricing">
+  <div class="sec-tag">Investment</div>
+  <h2 class="sec-title">One Price.<br>Everything In.</h2>
+  <div class="red-rule"></div>
+
+  <div class="pricing-layout">
+    <div class="price-card reveal">
+      <div class="price-inner">
+        <div class="price-tag">■ Full system — one-time payment</div>
+        <div class="price-amount"><sup>$</sup>97</div>
+        <div class="price-note">Lifetime access to the guides · 12 weeks of community</div>
+        <div class="price-divider"></div>
+        <div class="price-row">Interactive training guide</div>
+        <div class="price-row">3-day, 4-day and 5-day training splits</div>
+        <div class="price-row">Every exercise with full detail</div>
+        <div class="price-row">Nutrition framework + calorie calculator</div>
+        <div class="price-row">Daily standard system</div>
+        <div class="price-row">Mindset protocol</div>
+        <div class="price-row">12-week progress tracker</div>
+        <div class="price-row">Private WhatsApp accountability group</div>
+        <div class="price-row">Weekly check-ins — 12 weeks</div>
+        <div class="price-row">Direct access to Josaphat</div>
+        <div class="price-actions">
+          <a href="https://payhip.com/b/REPLACE_BUILT_LINK" class="btn btn-red btn-full">
+            Get The System — $97
+          </a>
+          <a href="#start" class="btn btn-outline btn-full">
+            Join the email list first
+          </a>
+        </div>
+        <div class="price-secure">🔒 Secure payment via Payhip · Instant access · Permanent</div>
+      </div>
+      <div class="price-watermark">$97</div>
+    </div>
+
+    <div class="price-right">
+      <div class="mini-card reveal reveal-d1">
+        <div class="mini-tag">■ Who this is for</div>
+        <div class="mini-title">The Serious Beginner</div>
+        <div class="mini-body">Someone with 0–2 years of experience who keeps stopping. Not because they're lazy — because they never had a complete system with real accountability behind it.</div>
+      </div>
+      <div class="mini-card reveal reveal-d1">
+        <div class="mini-tag">■ Who this is not for</div>
+        <div class="mini-title">The Casual Browser</div>
+        <div class="mini-body">If you're looking for motivation to save and never use, this isn't for you. This system requires you to actually execute — not feel good about thinking about it.</div>
+      </div>
+      <div class="mini-card reveal reveal-d1">
+        <div class="mini-tag">■ After purchase</div>
+        <div class="mini-title">What Happens Next</div>
+        <div class="mini-body">Guides delivered instantly. Scroll down, submit your WhatsApp number with your order reference. Added to the accountability group within 24 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHATSAPP COMMUNITY ─────────────────────────────────── -->
+<section class="sec group-sec" id="community">
+  <div class="group-inner">
+    <div class="group-text">
+      <div class="sec-tag">Final step</div>
+      <h2 class="group-title">Join The<br><span>Group.</span></h2>
+      <div class="red-rule"></div>
+      <p class="group-body">The private accountability community is where the system becomes real. Weekly check-ins, direct access, people doing the same work alongside you. This is what makes the difference between finishing and quitting.</p>
+      <div class="requirement">
+        <div class="req-label">■ Requirement</div>
+        <div class="req-text">This group is for paying clients only. Submit your Payhip order reference as proof of purchase. Unverified requests are not accepted.</div>
+      </div>
+    </div>
+
+    <div class="group-form reveal">
+      <div class="form-title">Submit Your<br>Number</div>
+      <p class="form-sub">Paying clients only. You'll be added within 24 hours of verification.</p>
+
+      <!-- WhatsApp form — replace YOUR_FORM_ID with Formspree form ID -->
+      <form id="wa-form" onsubmit="handleWaForm(event)" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="input-group">
+          <div>
+            <label class="input-label">Full name</label>
+            <input type="text" name="name" placeholder="Your name" required>
+          </div>
+          <div>
+            <label class="input-label">WhatsApp number (with country code)</label>
+            <input type="tel" name="whatsapp" placeholder="+1 234 567 8900" required>
+          </div>
+          <div>
+            <label class="input-label">Payhip order reference</label>
+            <input type="text" name="order_ref" placeholder="From your purchase confirmation" required>
+          </div>
+          <button type="submit" class="btn btn-bone btn-full" id="wa-btn">
+            Submit — Join The Group
+          </button>
+        </div>
+      </form>
+      <div class="success-msg" id="wa-success">
+        ✓ Received. You'll be added within 24 hours.
+      </div>
+      <!-- Replace YOUR_WHATSAPP_NUMBER with your number (country code, no +, no spaces) -->
+      <a href="https://wa.me/YOUR_WHATSAPP_NUMBER" class="wa-direct" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.12 1.522 5.854L0 24l6.335-1.502A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.817 9.817 0 01-5.002-1.368l-.359-.214-3.721.882.934-3.618-.235-.372A9.823 9.823 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+        Or message directly on WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CLOSING ────────────────────────────────────────────── -->
+<section class="closing">
+  <h2 class="closing-title">The Work<br>Starts<br><span>Now.</span></h2>
+  <div class="closing-right">
+    <p class="closing-sub">Every week you wait is a week you're not building. <b>The system is ready. The community is waiting.</b> The only missing variable is your decision.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:340px">
+      <a href="https://payhip.com/b/REPLACE_BUILT_LINK" class="btn btn-red" style="justify-content:center">
+        Get The System — $97
+      </a>
+      <a href="#start" class="btn btn-outline" style="justify-content:center">
+        Join the email list first
+      </a>
+    </div>
+    <p style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);margin-top:16px;letter-spacing:1px">
+      $97 · One time · Instant access · Permanent
+    </p>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="ft-logo">BUILD IT.</div>
+  <div class="ft-tagline">Discipline · Conviction · Build · Stop Starting Over</div>
+  <div class="ft-copy">© 2026 Build It · All rights reserved</div>
+</footer>
+
+<script>
+
+// ─── SCROLL REVEAL ───────────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ─── HERO EMAIL FORM → KIT + PAYHIP REDIRECT ─────────────────
+async function handleHeroForm(e) {
+  e.preventDefault();
+  const btn   = document.getElementById('hero-btn');
+  const email = document.getElementById('hero-email').value.trim();
+  const name  = document.getElementById('hero-name').value.trim();
+
+  btn.disabled     = true;
+  btn.textContent  = 'Redirecting to checkout...';
+
+  // Add subscriber to Kit in background — never blocks the redirect
+  // Replace YOUR_KIT_FORM_ID with the numeric ID from your Kit form embed code
+  try {
+    fetch('https://app.convertkit.com/forms/9531609/subscriptions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        'email_address':       email,
+        'fields[first_name]':  name
+      })
+    });
+  } catch(_) {}
+
+  // Redirect to Payhip checkout immediately — does not wait for Kit
+  window.location.href = 'https://payhip.com/b/C8hzq';
+}
+
+// ─── WHATSAPP FORM ────────────────────────────────────────────
+async function handleWaForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('wa-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  try {
+    const res = await fetch(e.target.action, {
+      method: 'POST',
+      body: new FormData(e.target),
+      headers: { Accept: 'application/json' }
+    });
+    if(res.ok) {
+      document.getElementById('wa-form').style.display = 'none';
+      document.getElementById('wa-success').classList.add('show');
+    } else {
+      btn.textContent = 'Try again';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Try again';
+    btn.disabled = false;
+  }
+}
+
+</script>
+</body>
+</html>
